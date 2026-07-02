@@ -17,12 +17,21 @@ uv run python fetch_data.py   # data/ に全スナップショットをダウン
 uv run jupyter lab analysis.ipynb
 ```
 
-主な分析パターン:
+ノートブックは6セクション構成（冒頭に目次あり）:
 
-- **急上昇ランキング**: `rising_ranking(months_back=1)` — 期間別の記事数増加 Top 20（`ascending=True` で下降）
-- **相対成長率ランキング**: `growth_ranking(months_back=3, min_start=50)` — 規模フィルタ付きの伸び率
-- **モメンタム**: `momentum_ranking()` — 直近で加速・失速しているトピック
-- **新規登場トピック**: `newcomer_ranking(months_back=6)` — 期間中に初登場したトピック
-- **時系列推移**: `plot_topics(["claudecode", "react", ...])` — 折れ線比較（`rate=True` で増加ペース、`normalize=True` で指数化、`metric=` で scraps 等に切替）
-- **テーマ別 small multiples / シェア推移 / 成長ヒートマップ**: ノートブック内の各セクション参照
-- **トピック検索**: `search_topics("キーワード")`
+1. **セットアップとデータロード**
+2. **ランキング** — 急上昇 `rising_ranking()` / 相対成長率 `growth_ranking()` / モメンタム `momentum_ranking()` / 新規登場 `newcomer_ranking()`
+3. **トピック比較** — 基本形は `compare_topics([...])`（絶対数と相対成長をセット表示）。AI / フロントエンド / Nix・環境構築 / ネイティブアプリ / テーマ別
+4. **マクロ視点** — シェア推移 / AI vs 非AI / 成長ヒートマップ `plot_growth_heatmap()`
+5. **記事以外の指標** — スクラップ・本（`metric=` の差し替え）
+6. **付録** — トピック検索 `search_topics("キーワード")`
+
+## ノートブックの再構成
+
+セル構成は `build_notebook.py` でコード管理している。構成を大きく変えるときは
+このスクリプトを編集して再生成→再実行する:
+
+```sh
+uv run python build_notebook.py
+uv run jupyter nbconvert --to notebook --execute --inplace analysis.ipynb
+```
